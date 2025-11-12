@@ -1,0 +1,23 @@
+---
+- name: Ensure required packages
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - python3.11-venv
+    state: present
+    update_cache: yes
+
+- name: Create virtualenv for ansible modules
+  ansible.builtin.pip:
+    name:
+      - proxmoxer>=2.0
+      - requests
+    virtualenv: "{{pyenv_path}}/bin/python3"
+    virtualenv_command: python3 -m venv
+
+- name: Fix permissions on the ansible virtualenv
+  ansible.builtin.file:
+    path: "{{pyenv_path}}"
+    recurse: yes
+    mode: '0755'
+

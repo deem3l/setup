@@ -1,3 +1,18 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# defaults file for deploy_vms
+pyenv_path: "/opt/ansible-env"
+node_name: "pve"
+storage_name: "local-lvm"
+template:
+  debian: "tmpl-debian"
+vm:
+  debian:
+    - id: 201
+      name: "debian-lab-1"
+      template: "{{template.debian}}"
+    - id: 202
+      name: "debian-lab-2"
+      template: "{{template.debian}}"
+    - id: 203
+      name: "debian-lab-3"
+      template: "{{template.debian}}"
+

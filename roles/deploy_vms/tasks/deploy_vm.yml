@@ -1,0 +1,53 @@
+---
+- name: Clone VMs from template
+  community.general.proxmox_kvm:
+    api_host: "{{ ansible_host }}"
+    api_user: root@pam
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node_name }}"
+    clone: "{{ item.template }}"
+    name: "{{ item.name }}"
+    newid: "{{ item.id }}"
+    full: false
+    memory: 2048
+    cores: 2
+    net:
+      net0: virtio,bridge=vmbr0
+    state: present
+  loop: "{{ vm.debian }}"
+
+- name: Remove old network interface
+  community.general.proxmox_kvm:
+    api_host: "{{ ansible_host }}"
+    api_user: root@pam
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node_name }}"
+    vmid: "{{ item.id }}"
+    delete: net0
+    state: present
+  loop: "{{ vm.debian }}"
+
+- name: Recreate network interface on vmbr0
+  community.general.proxmox_kvm:
+    api_host: "{{ ansible_host }}"
+    api_user: root@pam
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node_name }}"
+    vmid: "{{ item.id }}"
+    net:
+      net0: virtio,bridge=vmbr0,firewall=0,rate=0
+    update: yes
+    update_unsafe: true
+    state: present
+  loop: "{{ vm.debian }}"
+
+- name: Start VMs
+  community.general.proxmox_kvm:
+    api_host: "{{ ansible_host }}"
+    api_user: root@pam
+    api_password: "{{ proxmox_password }}"
+    node: "{{ node_name }}"
+    vmid: "{{ item.id }}"
+    state: started
+  loop: "{{ vm.debian }}"
+

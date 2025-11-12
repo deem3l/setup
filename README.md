@@ -1,5 +1,6 @@
-# setup
-A project to setup the lab
+# Deemel setup
+
+A project to setup the lab for the deemel company on proxmox.
 
 ## Install
 
@@ -9,7 +10,7 @@ First install ansible :
 
 ```
 pipx install ansible
-echo '--- Custom ansible pipx path ---'
+echo '--- Custom ansible pipx path ---' >> ~/.bashrc
 echo 'export PATH=$PATH:~/.local/share/pipx/venvs/ansible/bin' >> ~/.bashrc
 echo 'export PATH=$PATH:~/.local/bin' >> ~/.bashrc
 source ~/.bashrc
@@ -27,6 +28,13 @@ cd deem3l_setup
 Configure your own ansible.cfg :
 
 ```
-mv ansible.cfg.tmpl ansible.cfg
+cp ansible.cfg.tmpl ansible.cfg
 vim ansible.cfg # Fill with your own conf/access
+```
+
+
+## Launch
+
+```
+ansible-playbook  playbooks/00_deploy_vm.yml -e "proxmox_password=MYPASSWORD"
 ```

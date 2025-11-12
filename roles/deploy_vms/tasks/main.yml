@@ -1,3 +1,7 @@
-#SPDX-License-Identifier: MIT-0
----
-# tasks file for deploy_vms
+- name: Ensure the env is ready
+  ansible.builtin.include_tasks: setup_python.yml
+
+- name: Deploy vm
+  vars:
+    ansible_python_interpreter: "{{pyenv_path}}/bin/python3/bin/python3"
+  ansible.builtin.include_tasks: deploy_vm.yml
